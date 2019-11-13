@@ -26,7 +26,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/marceloaguero/angular-grpc/src/app/pb"
+	pb "github.com/marceloaguero/echo-go/pb"
 	"google.golang.org/grpc"
 )
 
@@ -38,7 +38,7 @@ const (
 type server struct{}
 
 // SayHello implements helloworld.GreeterServer
-func (s *server) SayHello(ctx context.Context, in *pb.EchoRequest) (*pb.EchoResponse, error) {
+func (s *server) UnaryEcho(ctx context.Context, in *pb.EchoRequest) (*pb.EchoResponse, error) {
 	log.Printf("Received: %v", in.GetMessage())
 	return &pb.EchoResponse{Message: "Hello " + in.GetMessage()}, nil
 }
@@ -50,7 +50,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	// pb.RegisterEchoServer(s, &server{})
-	pb.RegisterEchoServer(s, )
+	pb.RegisterEchoServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
